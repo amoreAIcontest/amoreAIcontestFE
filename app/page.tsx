@@ -1,10 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import SearchBar from './components/SearchBar';
-import Header from './components/Header';
-import ProductCard from './components/ProductCard';
-import CategorySidebar from './components/CategorySidebar';
+import SearchBar from './_components/SearchBar';
+import Header from './_components/Header';
+import ProductCard from './_components/ProductCard';
+import CategorySidebar from './_components/CategorySidebar';
 import { products } from '@/types/products';
 
 type SortOption = '신상품순' | '판매순' | '평점순';
@@ -75,6 +75,7 @@ export default function Home() {
                   {filteredProducts.slice(rowIndex * 3, rowIndex * 3 + 3).map((product, index) => (
                     <ProductCard
                       key={rowIndex * 3 + index}
+                      productId={product.id}
                       imageUrl={product.imageUrl}
                       title={product.title}
                     />
