@@ -5,18 +5,19 @@ import SearchBar from './components/SearchBar';
 import Header from './components/Header';
 import ProductCard from './components/ProductCard';
 import CategorySidebar from './components/CategorySidebar';
-
-const products = Array.from({ length: 9 }).map(() => ({
-  imageUrl: '/dummyImage.png',
-  title: '그린티 아미노 수분 클렌징 폼 150g',
-}));
+import { products } from '@/types/products';
 
 type SortOption = '신상품순' | '판매순' | '평점순';
 
 export default function Home() {
   const [selectedSort, setSelectedSort] = useState<SortOption>('신상품순');
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   const sortOptions: SortOption[] = ['신상품순', '판매순', '평점순'];
+
+  const filteredProducts = products.filter((product) =>
+    product.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="w-full min-h-screen bg-neutral-100">
@@ -24,7 +25,7 @@ export default function Home() {
       <div className="w-full bg-neutral-100">
         <div className="w-full bg-white h-[123px] flex items-center mb-6">
           <div className="w-full max-w-[1440px] mx-auto px-4">
-            <SearchBar />
+            <SearchBar value={searchQuery} onChange={setSearchQuery} />
           </div>
         </div>
       </div>
@@ -66,12 +67,12 @@ export default function Home() {
             <div className="flex-1 inline-flex flex-col justify-start items-start gap-10 ml-1">
               <div className="self-stretch flex justify-end">
                 <div className="justify-start text-zinc-700 text-base font-normal font-['Pretendard'] leading-6 mr-40">
-                  118개의 상품이 있습니다
+                  {filteredProducts.length}개의 상품이 있습니다
                 </div>
               </div>
-              {Array.from({ length: Math.ceil(products.length / 3) }).map((_, rowIndex) => (
+              {Array.from({ length: Math.ceil(filteredProducts.length / 3) }).map((_, rowIndex) => (
                 <div key={rowIndex} className="self-stretch inline-flex justify-start items-center gap-[101px]">
-                  {products.slice(rowIndex * 3, rowIndex * 3 + 3).map((product, index) => (
+                  {filteredProducts.slice(rowIndex * 3, rowIndex * 3 + 3).map((product, index) => (
                     <ProductCard
                       key={rowIndex * 3 + index}
                       imageUrl={product.imageUrl}
