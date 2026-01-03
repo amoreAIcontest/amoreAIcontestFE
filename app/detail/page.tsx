@@ -31,7 +31,7 @@ function DetailContent() {
             상세 페이지 분석 결과
           </div>
           <ProductDetailContent 
-            analyzeTypes={['water', 'waterdrop', 'skin', 'product', 'leaf'] as AnalyzeType[]}
+            analyzeTypes={['water', 'waterdrop', 'skin', 'product', 'leaf', , 'smooth','texture'] as AnalyzeType[]}
           />
         </div>
         <div className="flex-1 flex flex-col gap-5">

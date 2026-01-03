@@ -1,6 +1,6 @@
 import Image from 'next/image';
 
-export type AnalyzeType = 'water' | 'waterdrop' | 'skin' | 'product' | 'leaf';
+export type AnalyzeType = 'water' | 'waterdrop' | 'skin' | 'product' | 'leaf' | 'texture' | 'smooth';
 
 interface AnalyzeChipProps {
   type: AnalyzeType;
@@ -36,6 +36,18 @@ const analyzeConfig: Record<AnalyzeType, { label: string; icon: string; bgColor:
     icon: '/icons/detail-icon/analyze-icon/leaf.svg',
     bgColor: 'bg-emerald-50',
     iconColor: 'bg-emerald-500',
+  },
+  texture: {
+    label: '매끄러운 결케어',
+    icon: '/icons/detail-icon/analyze-icon/texture.svg',
+    bgColor: 'bg-sky-100',
+    iconColor: 'bg-sky-500',
+  },
+  smooth: {
+    label: '부드러움',
+    icon: '/icons/detail-icon/analyze-icon/smooth.svg',
+    bgColor: 'bg-sky-100',
+    iconColor: 'bg-sky-500',
   },
 };
 
