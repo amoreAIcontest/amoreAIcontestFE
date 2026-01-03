@@ -7,6 +7,7 @@ import ProductDetailContent from '../_components/ProductDetailContent';
 import ProductDetailImage from '../_components/ProductDetailImage';
 import ReviewSection from '../_components/ReviewSection';
 import AnalysisComparison from '../_components/AnalysisComparison';
+import InsightSection from '../_components/InsightSection';
 import RatingDistribution from '../_components/RatingDistribution';
 import SentimentDistribution from '../_components/SentimentDistribution';
 import { products } from '@/types/products';
@@ -119,6 +120,12 @@ function DetailContent() {
           readOnly={true}
         />
       </div>
+      <InsightSection
+        productAppealText="이 제품은 환경 친화적 포장재와 비건 인증을 통해 지속가능성을 추구하는 소비자들에게 어필할 수 있습니다. 특히 젊은 세대와 환경에 관심이 많은 타겟 고객층에게 강한 제품소구를 보입니다."
+        salesStrategyText="리뷰 분석 결과를 바탕으로, 수분 공급과 저자극 성분에 대한 긍정적 피드백이 많으므로 이를 강조한 마케팅 전략을 수립하는 것이 효과적입니다. 특히 민감한 피부를 가진 고객층을 타겟으로 한 맞춤형 마케팅 캠페인을 추진할 수 있습니다."
+        improvementImageUrl="https://placehold.co/375x694"
+        improvementText="상세 페이지에서 제품의 실제 사용 후기를 더 많이 포함하여 구매 결정에 도움을 줄 수 있습니다. 또한 리뷰에서 자주 언급되는 수분 공급 효과와 저자극 성분에 대한 정보를 더 명확하게 시각화하여 전달하는 것이 좋겠습니다."
+      />
     </>
   );
 }
