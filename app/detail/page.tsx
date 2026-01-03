@@ -6,6 +6,7 @@ import ProductDetailHeader from '../_components/ProductDetailHeader';
 import ProductDetailContent from '../_components/ProductDetailContent';
 import ProductDetailImage from '../_components/ProductDetailImage';
 import ReviewSection from '../_components/ReviewSection';
+import AnalysisComparison from '../_components/AnalysisComparison';
 import RatingDistribution from '../_components/RatingDistribution';
 import SentimentDistribution from '../_components/SentimentDistribution';
 import { products } from '@/types/products';
@@ -90,6 +91,33 @@ function DetailContent() {
             ]}
           />
         </div>
+        <AnalysisComparison 
+          commonPoints="캡과 용기 모두 PP 단일소재를 사용하여 분리배출이 용이하게 하였습니다.
+
+재생 플라스틱 캡
+버려진 플라스틱을 재가공하여 만든 재생 원료를 캡에 적용하였습니다.
+
+비건 인증 완료
+
+수분 공급 기능
+상세 페이지와 리뷰 모두에서 제품의 수분 공급 효과에 대해 긍정적으로 언급하고 있습니다.
+
+저자극 성분
+두 분석 결과 모두 저자극 성분 사용을 강조하고 있으며, 민감한 피부에도 안전하게 사용 가능하다고 명시되어 있습니다.
+
+유수분 밸런스
+상세 페이지의 주요 특징과 리뷰에서 언급된 사용감이 모두 유수분 밸런스 조절에 초점을 맞추고 있습니다."
+          differences="상세 페이지에서는 제품의 포장재와 용기 재질에 대한 상세한 정보를 제공하지만, 리뷰에서는 실제 사용 경험과 포장 상태에 대한 평가가 주로 다뤄집니다.
+
+상세 페이지는 제품의 기술적 특징과 인증 정보를 강조하는 반면, 리뷰는 실제 사용자의 피부 타입별 반응과 장기 사용 후기를 중심으로 구성되어 있습니다.
+
+상세 페이지의 분석 결과는 제품의 객관적 특성에 집중하지만, 리뷰 분석 결과는 주관적인 만족도와 감정적 반응을 포함하고 있습니다.
+
+제품 용기 형태에 대한 정보는 상세 페이지에서만 명시되며, 리뷰에서는 용기의 실용성과 디자인에 대한 평가가 주로 이루어집니다.
+
+상세 페이지는 제품의 지속가능성과 환경 친화적 특징을 강조하지만, 리뷰에서는 이러한 측면보다는 제품의 효과와 가성비에 대한 평가가 더 많이 나타납니다."
+          readOnly={true}
+        />
       </div>
     </>
   );
