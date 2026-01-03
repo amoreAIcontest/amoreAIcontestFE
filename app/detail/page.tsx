@@ -4,6 +4,7 @@ import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import ProductDetailHeader from '../_components/ProductDetailHeader';
 import ProductDetailContent from '../_components/ProductDetailContent';
+import ProductDetailImage from '../_components/ProductDetailImage';
 import RatingDistribution from '../_components/RatingDistribution';
 import SentimentDistribution from '../_components/SentimentDistribution';
 import { products } from '@/types/products';
@@ -31,7 +32,7 @@ function DetailContent() {
             상세 페이지 분석 결과
           </div>
           <ProductDetailContent 
-            analyzeTypes={['water', 'waterdrop', 'skin', 'product', 'leaf', , 'smooth','texture'] as AnalyzeType[]}
+            analyzeTypes={['water', 'waterdrop', 'skin', 'product', 'leaf', 'smooth', 'texture'] as AnalyzeType[]}
           />
         </div>
         <div className="flex-1 flex flex-col gap-5">
@@ -59,6 +60,9 @@ function DetailContent() {
             />
           </div>
         </div>
+      </div>
+      <div className="w-full flex justify-center">
+        <ProductDetailImage imageUrl="/dummy.png" alt={product?.title || '상세 페이지'} />
       </div>
     </>
   );
