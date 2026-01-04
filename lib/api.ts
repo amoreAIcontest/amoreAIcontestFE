@@ -1,4 +1,4 @@
-import { ProductListResponse, ProductListParams, ProductDetailResponse, ProductRatingsResponse, ProductSentimentResponse } from '@/types/api';
+import { ProductListResponse, ProductListParams, ProductDetailResponse, ProductRatingsResponse, ProductSentimentResponse, ProductImagesResponse } from '@/types/api';
 
 const API_BASE_URL = (process.env.NEXT_PUBLIC_API_BASE_URL || '').replace(/\/$/, '');
 
@@ -128,6 +128,35 @@ export async function fetchProductSentiment(
 
   if (data.code !== 200) {
     throw new Error(data.message || 'Failed to fetch product sentiment');
+  }
+
+  return data;
+}
+
+export async function fetchProductImages(
+  productId: number,
+  isServer: boolean = false
+): Promise<ProductImagesResponse> {
+  if (isServer && !API_BASE_URL) {
+    throw new Error('NEXT_PUBLIC_API_BASE_URL is required for server-side requests');
+  }
+
+  const url = API_BASE_URL
+    ? `${API_BASE_URL}/api/v1/product/${productId}/images`
+    : `/api/v1/product/${productId}/images`;
+
+  const response = await fetch(url, {
+    cache: 'no-store',
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch product images');
+  }
+
+  const data: ProductImagesResponse = await response.json();
+
+  if (data.code !== 200) {
+    throw new Error(data.message || 'Failed to fetch product images');
   }
 
   return data;

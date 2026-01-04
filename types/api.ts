@@ -77,3 +77,14 @@ export interface ProductSentimentResponse {
   data: ProductSentimentData;
 }
 
+export interface ProductImagesData {
+  images: string[];
+}
+
+export interface ProductImagesResponse {
+  status: string;
+  message: string;
+  code: number;
+  data: ProductImagesData;
+}
+
