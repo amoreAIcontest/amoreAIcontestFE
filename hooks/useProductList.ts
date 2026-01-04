@@ -113,8 +113,7 @@ export function useProductList({
           data.data.items[data.data.items.length - 1].product_id
         );
       }
-    } catch (err) {
-      console.error('Error loading more products:', err);
+    } catch {
     }
   }, [category, sort, lastId, size, isLoading, hasNext, fetchProducts]);
 
@@ -123,14 +122,12 @@ export function useProductList({
   const prevSortRef = useRef<string | null | undefined>(sort);
 
   useEffect(() => {
-    // Skip initial mount if we have initialData
     if (isInitialMount.current && initialData) {
       isInitialMount.current = false;
       prevCategoryRef.current = category;
       prevSortRef.current = sort;
       return;
     }
-    // Only refetch if category or sort has actually changed
     if (prevCategoryRef.current === category && prevSortRef.current === sort) {
       return;
     }
@@ -162,8 +159,7 @@ export function useProductList({
             data.data.items[data.data.items.length - 1].product_id
           );
         }
-      } catch (err) {
-        console.error('Error fetching products:', err);
+      } catch {
       }
     };
 

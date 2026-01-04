@@ -36,7 +36,6 @@ export function useReviewList({
 
   useEffect(() => {
     if (initialData) {
-      console.log('[useReviewList] Initial data received:', JSON.stringify(initialData, null, 2));
     }
   }, [initialData]);
   const [isLoading, setIsLoading] = useState(false);
@@ -60,7 +59,6 @@ export function useReviewList({
 
       try {
         const data = await fetchReviewList(productId, params, false);
-        console.log('[useReviewList] Fetched data:', JSON.stringify(data, null, 2));
         if (data.code !== 200) {
           throw new Error(data.message || 'Failed to fetch reviews');
         }
@@ -98,8 +96,7 @@ export function useReviewList({
           data.data.items[data.data.items.length - 1].review_id
         );
       }
-    } catch (err) {
-      console.error('Error loading more reviews:', err);
+    } catch {
     }
   }, [sort, sentimentType, aspectType, lastId, size, isLoading, hasNext, fetchReviews]);
 
@@ -154,8 +151,7 @@ export function useReviewList({
             data.data.items[data.data.items.length - 1].review_id
           );
         }
-      } catch (err) {
-        console.error('Error fetching reviews:', err);
+      } catch {
       }
     };
 

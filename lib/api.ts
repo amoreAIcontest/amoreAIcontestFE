@@ -202,8 +202,6 @@ export async function fetchReviewList(
   }
 
   const data: ReviewListResponse = await response.json();
-  
-  console.log('[fetchReviewList] Response:', JSON.stringify(data, null, 2));
 
   if (data.code !== 200) {
     throw new Error(data.message || 'Failed to fetch reviews');
