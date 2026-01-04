@@ -258,6 +258,12 @@ export default function ReviewSection({ productId, initialData }: ReviewSectionP
               </div>
             </div>
           ))
+        ) : !isLoading && convertedReviews.length === 0 && !error ? (
+          <div className="w-full flex items-center justify-center py-12">
+            <div className="text-zinc-500 text-base font-medium font-['Pretendard']">
+              리뷰가 없습니다
+            </div>
+          </div>
         ) : (
           <>
             {convertedReviews.map((review) => (
