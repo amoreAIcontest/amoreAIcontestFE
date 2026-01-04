@@ -88,3 +88,32 @@ export interface ProductImagesResponse {
   data: ProductImagesData;
 }
 
+export interface ReviewItem {
+  review_id: number;
+  author: string;
+  rating: number;
+  content: string;
+  review_date: string;
+  sellers_response?: string;
+  review_media: string[];
+  review_keyword?: string;
+}
+
+export interface ReviewListParams {
+  lastId?: number | null;
+  size?: number;
+  sort?: string | null;
+  sentimentType?: string | null;
+  aspectType?: string | null;
+}
+
+export interface ReviewListResponse {
+  status: string;
+  message: string;
+  code: number;
+  data: {
+    items: ReviewItem[];
+    slice: SliceInfo;
+  };
+}
+

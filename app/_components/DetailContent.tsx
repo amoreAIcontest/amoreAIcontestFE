@@ -14,7 +14,7 @@ import { useProductDetail } from '@/hooks/useProductDetail';
 import { useProductRatings } from '@/hooks/useProductRatings';
 import { useProductSentiment } from '@/hooks/useProductSentiment';
 import { useProductImages } from '@/hooks/useProductImages';
-import { ProductDetailResponse, ProductRatingsResponse, ProductSentimentResponse, ProductImagesResponse } from '@/types/api';
+import { ProductDetailResponse, ProductRatingsResponse, ProductSentimentResponse, ProductImagesResponse, ReviewListResponse } from '@/types/api';
 import { mapApiCategoryToKorean } from '@/types/categories';
 import { type AnalyzeType } from './AnalyzeChip';
 
@@ -23,9 +23,10 @@ interface DetailContentProps {
   initialRatingsData?: ProductRatingsResponse;
   initialSentimentData?: ProductSentimentResponse;
   initialImagesData?: ProductImagesResponse;
+  initialReviewsData?: ReviewListResponse;
 }
 
-function DetailContentInner({ initialData, initialRatingsData, initialSentimentData, initialImagesData }: DetailContentProps) {
+function DetailContentInner({ initialData, initialRatingsData, initialSentimentData, initialImagesData, initialReviewsData }: DetailContentProps) {
   const searchParams = useSearchParams();
   const productId = searchParams.get('id');
   
@@ -105,28 +106,8 @@ function DetailContentInner({ initialData, initialRatingsData, initialSentimentD
         <div className="w-full flex gap-5 justify-center">
           <ProductDetailImage images={images} alt={product.name} />
           <ReviewSection 
-            reviews={[
-              {
-                id: '1',
-                username: 'j*****y',
-                profileImage: 'https://placehold.co/40x40',
-                rating: 3,
-                date: '2025.12.24 13:00',
-                packaging: 'Super good, and everything came undamaged. Easy to recycle aswell.',
-                beautyProfile: 'Good Product for oily skin. Have stuck with innisfree ever since my first time taking skin care seriously :)',
-                sellerResponse: 'Dear Customer, We are grateful you took the time to leave us a review and a 3-star rating. We are happy to know that you have already received your order. Hope you enjoyed our products as much as we did! Thank you and we look forward to hearing from you again.',
-              },
-              {
-                id: '2',
-                username: 'j*****y',
-                profileImage: 'https://placehold.co/40x40',
-                rating: 3,
-                date: '2025.12.24 13:00',
-                packaging: 'Super good, and everything came undamaged. Easy to recycle aswell.',
-                beautyProfile: 'Good Product for oily skin. Have stuck with innisfree ever since my first time taking skin care seriously :)',
-                sellerResponse: 'Dear Customer, We are grateful you took the time to leave us a review and a 3-star rating. We are happy to know that you have already received your order. Hope you enjoyed our products as much as we did! Thank you and we look forward to hearing from you again.',
-              },
-            ]}
+            productId={productIdNumber}
+            initialData={initialReviewsData}
           />
         </div>
         <AnalysisComparison 
@@ -167,10 +148,10 @@ function DetailContentInner({ initialData, initialRatingsData, initialSentimentD
   );
 }
 
-export default function DetailContent({ initialData, initialRatingsData, initialSentimentData, initialImagesData }: DetailContentProps) {
+export default function DetailContent({ initialData, initialRatingsData, initialSentimentData, initialImagesData, initialReviewsData }: DetailContentProps) {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <DetailContentInner initialData={initialData} initialRatingsData={initialRatingsData} initialSentimentData={initialSentimentData} initialImagesData={initialImagesData} />
+      <DetailContentInner initialData={initialData} initialRatingsData={initialRatingsData} initialSentimentData={initialSentimentData} initialImagesData={initialImagesData} initialReviewsData={initialReviewsData} />
     </Suspense>
   );
 }
