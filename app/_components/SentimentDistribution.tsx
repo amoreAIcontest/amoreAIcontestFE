@@ -48,7 +48,7 @@ export default function SentimentDistribution({ sentiments }: SentimentDistribut
   });
 
   return (
-    <div className="w-96 h-80 p-6 bg-neutral-100 rounded-3xl inline-flex flex-col justify-start items-start gap-2.5">
+    <div className="w-96 h-[340px] p-6 bg-neutral-100 rounded-3xl inline-flex flex-col justify-start items-start gap-2.5">
       <div className="w-80 flex flex-col justify-start items-start gap-4">
         <div className="self-stretch justify-start text-zinc-900 text-base font-semibold font-['Pretendard'] leading-6">
           대표 리뷰 감정 분석

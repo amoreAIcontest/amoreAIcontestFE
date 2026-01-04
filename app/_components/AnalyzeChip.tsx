@@ -55,22 +55,20 @@ export default function AnalyzeChip({ type }: AnalyzeChipProps) {
   const config = analyzeConfig[type];
 
   return (
-    <div className="h-14 pl-1 pr-5 py-1 bg-white rounded-[34px] inline-flex flex-col justify-start items-start gap-2.5">
-      <div className="inline-flex justify-start items-center gap-2">
-        <div className={`w-11 h-11 p-2.5 ${config.bgColor} rounded-3xl flex justify-start items-center gap-2.5`}>
-          <div className="w-6 h-6 relative overflow-hidden shrink-0">
-            <Image
-              src={config.icon}
-              alt={config.label}
-              width={24}
-              height={24}
-              className="w-full h-full"
-            />
-          </div>
+    <div className="h-14 px-1 pr-5 py-1 bg-white rounded-[34px] flex items-center gap-2">
+      <div className={`w-11 h-11 p-2.5 ${config.bgColor} rounded-3xl flex items-center justify-center shrink-0`}>
+        <div className="w-6 h-6 relative overflow-hidden">
+          <Image
+            src={config.icon}
+            alt={config.label}
+            width={24}
+            height={24}
+            className="w-full h-full"
+          />
         </div>
-        <div className="justify-start text-zinc-700 text-xl font-semibold font-['Pretendard'] leading-8">
-          {config.label}
-        </div>
+      </div>
+      <div className="text-zinc-700 text-xl font-semibold font-['Pretendard'] leading-8 whitespace-nowrap">
+        {config.label}
       </div>
     </div>
   );

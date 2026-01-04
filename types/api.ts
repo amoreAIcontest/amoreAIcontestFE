@@ -128,6 +128,7 @@ export interface CanvasSuggestion {
 export interface InsightData {
   product_id: number;
   product_name: string;
+  keywords: string[];
   comparison: {
     matches: string[];
     mismatches: string[];

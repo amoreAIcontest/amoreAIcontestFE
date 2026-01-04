@@ -93,6 +93,7 @@ function DetailContentInner({ initialData, initialRatingsData, initialSentimentD
               상세 페이지 분석 결과
             </div>
             <ProductDetailContent 
+              keywords={insights?.keywords}
               analyzeTypes={['water', 'waterdrop', 'skin', 'product', 'leaf', 'smooth', 'texture'] as AnalyzeType[]}
             />
           </div>
