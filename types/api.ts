@@ -58,3 +58,18 @@ export interface ProductRatingsResponse {
   data: ProductRatingsData;
 }
 
+export interface ProductSentimentData {
+  very_negative: number;
+  negative: number;
+  neutral: number;
+  positive: number;
+  very_positive: number;
+}
+
+export interface ProductSentimentResponse {
+  status: string;
+  message: string;
+  code: number;
+  data: ProductSentimentData;
+}
+

@@ -12,16 +12,18 @@ import RatingDistribution from './RatingDistribution';
 import SentimentDistribution from './SentimentDistribution';
 import { useProductDetail } from '@/hooks/useProductDetail';
 import { useProductRatings } from '@/hooks/useProductRatings';
-import { ProductDetailResponse, ProductRatingsResponse } from '@/types/api';
+import { useProductSentiment } from '@/hooks/useProductSentiment';
+import { ProductDetailResponse, ProductRatingsResponse, ProductSentimentResponse } from '@/types/api';
 import { mapApiCategoryToKorean } from '@/types/categories';
 import { type AnalyzeType } from './AnalyzeChip';
 
 interface DetailContentProps {
   initialData?: ProductDetailResponse;
   initialRatingsData?: ProductRatingsResponse;
+  initialSentimentData?: ProductSentimentResponse;
 }
 
-function DetailContentInner({ initialData, initialRatingsData }: DetailContentProps) {
+function DetailContentInner({ initialData, initialRatingsData, initialSentimentData }: DetailContentProps) {
   const searchParams = useSearchParams();
   const productId = searchParams.get('id');
   
@@ -34,6 +36,11 @@ function DetailContentInner({ initialData, initialRatingsData }: DetailContentPr
   const { ratings } = useProductRatings({
     productId: productIdNumber,
     initialData: initialRatingsData,
+  });
+
+  const { sentiments } = useProductSentiment({
+    productId: productIdNumber,
+    initialData: initialSentimentData,
   });
 
   const categoryMapping = product?.category
@@ -83,13 +90,7 @@ function DetailContentInner({ initialData, initialRatingsData }: DetailContentPr
                 ratings={ratings}
               />
               <SentimentDistribution 
-                sentiments={[
-                  { type: 'veryPositive', percentage: 75 },
-                  { type: 'positive', percentage: 75 },
-                  { type: 'neutral', percentage: 50 },
-                  { type: 'negative', percentage: 25 },
-                  { type: 'veryNegative', percentage: 25 },
-                ]}
+                sentiments={sentiments}
               />
             </div>
           </div>
@@ -159,10 +160,10 @@ function DetailContentInner({ initialData, initialRatingsData }: DetailContentPr
   );
 }
 
-export default function DetailContent({ initialData, initialRatingsData }: DetailContentProps) {
+export default function DetailContent({ initialData, initialRatingsData, initialSentimentData }: DetailContentProps) {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <DetailContentInner initialData={initialData} initialRatingsData={initialRatingsData} />
+      <DetailContentInner initialData={initialData} initialRatingsData={initialRatingsData} initialSentimentData={initialSentimentData} />
     </Suspense>
   );
 }
