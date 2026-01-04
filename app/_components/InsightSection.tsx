@@ -12,6 +12,16 @@ interface InsightSectionProps {
   improvementText?: string;
 }
 
+function isValidUrl(url: string): boolean {
+  if (!url || url.trim() === '') return false;
+  try {
+    new URL(url);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export default function InsightSection({
   productAppealText = '',
   salesStrategyText = '',
@@ -19,6 +29,8 @@ export default function InsightSection({
   improvementText = '',
 }: InsightSectionProps) {
   const [activeTab, setActiveTab] = useState<InsightTab>('productAppeal');
+  
+  const hasValidImageUrl = isValidUrl(improvementImageUrl);
 
   const tabs = [
     { id: 'productAppeal' as InsightTab, label: '제품소구' },
@@ -27,7 +39,7 @@ export default function InsightSection({
   ];
 
   return (
-    <div className={`self-stretch p-7 bg-white rounded-3xl inline-flex flex-col justify-start items-start gap-2.5 ${activeTab === 'improvement' ? 'h-[755px]' : 'h-[466px]'}`}>
+    <div className="self-stretch p-7 bg-white rounded-3xl inline-flex flex-col justify-start items-start gap-2.5">
       <div className="w-[1184px] flex flex-col justify-start items-start gap-5">
         <div className="w-96 flex flex-col justify-start items-start gap-5">
           <div className="self-stretch justify-start text-zinc-900 text-xl font-bold font-['Pretendard'] leading-8">
@@ -61,17 +73,17 @@ export default function InsightSection({
         </div>
 
         {activeTab === 'productAppeal' || activeTab === 'salesStrategy' ? (
-          <div className="self-stretch h-72 p-6 bg-neutral-100 rounded-3xl flex flex-col justify-center items-center gap-2.5">
-            <div className="w-[529px] flex flex-col justify-center items-center gap-4">
-              <div className="self-stretch text-center justify-start text-zinc-900 text-xl font-semibold font-['Pretendard'] leading-8">
+          <div className="w-full p-6 bg-neutral-100 rounded-3xl flex flex-col justify-start items-start gap-2.5">
+            <div className="w-full h-[300px] flex flex-col justify-start items-start gap-4">
+              <div className="self-stretch justify-start text-zinc-900 text-lg font-medium font-['Pretendard'] leading-7">
                 {activeTab === 'productAppeal' ? productAppealText || 'Text Area' : salesStrategyText || 'Text Area'}
               </div>
             </div>
           </div>
         ) : (
-          <div className="w-[1184px] h-[755px] p-6 bg-neutral-100 rounded-3xl inline-flex justify-start items-center gap-8">
-            <div className="w-96 h-[694px] rounded-[20px] border border-zinc-400 relative overflow-hidden">
-              {improvementImageUrl ? (
+          <div className="w-[1184px] p-6 bg-neutral-100 rounded-3xl inline-flex justify-start items-start gap-8">
+            <div className="w-96 min-h-[694px] rounded-[20px] border border-zinc-400 relative overflow-hidden shrink-0">
+              {hasValidImageUrl ? (
                 <Image
                   src={improvementImageUrl}
                   alt="개선 아이디어"
@@ -80,14 +92,14 @@ export default function InsightSection({
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                <div className="w-full h-full min-h-[694px] bg-gray-200 flex items-center justify-center">
                   <span className="text-zinc-500 text-sm">이미지</span>
                 </div>
               )}
             </div>
-            <div className="flex-1 self-stretch bg-white rounded-[20px] inline-flex flex-col justify-center items-center gap-4">
+            <div className="flex-1 bg-white rounded-[20px] inline-flex flex-col justify-start items-start gap-4 p-6">
               <div 
-                className="self-stretch text-center justify-start text-zinc-900 text-xl font-semibold font-['Pretendard'] leading-8"
+                className="self-stretch h-[650px] justify-start text-zinc-900 text-lg font-medium font-['Pretendard'] leading-7"
                 dangerouslySetInnerHTML={{ 
                   __html: improvementText || 'Text Area<br/>(어떻게 개선하라는 안내)' 
                 }}

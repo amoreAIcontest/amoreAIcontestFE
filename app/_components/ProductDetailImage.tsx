@@ -4,30 +4,38 @@ import { useState } from 'react';
 import Image from 'next/image';
 
 interface ProductDetailImageProps {
-  imageUrl: string;
+  images: string[];
   alt?: string;
 }
 
-export default function ProductDetailImage({ imageUrl, alt = '상세 페이지' }: ProductDetailImageProps) {
+export default function ProductDetailImage({ images, alt = '상세 페이지' }: ProductDetailImageProps) {
   const [isExpanded, setIsExpanded] = useState(false);
+
+  if (!images || images.length === 0) {
+    return null;
+  }
+  const firstImage = images[0];
 
   return (
     <div className="w-96 rounded-3xl overflow-hidden relative">
       {isExpanded ? (
         <div className="w-full max-h-[1000px] overflow-y-auto">
-          <Image
-            src={imageUrl}
-            alt={alt}
-            width={384}
-            height={2000}
-            className="w-full h-auto"
-            unoptimized
-          />
+          {images.map((imageUrl, index) => (
+            <Image
+              key={index}
+              src={imageUrl}
+              alt={`${alt} ${index + 1}`}
+              width={384}
+              height={2000}
+              className="w-full h-auto"
+              unoptimized
+            />
+          ))}
         </div>
       ) : (
         <div className="w-full h-[540px] overflow-hidden relative flex flex-col justify-end">
           <Image
-            src={imageUrl}
+            src={firstImage}
             alt={alt}
             width={384}
             height={2000}

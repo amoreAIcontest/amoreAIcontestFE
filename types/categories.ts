@@ -115,3 +115,20 @@ export const apiCategoryMapping: Record<string, CategoryMapping> = {
 export function mapApiCategoryToKorean(apiCategory: string): CategoryMapping | null {
   return apiCategoryMapping[apiCategory] || null;
 }
+
+export function mapKoreanToApiCategory(category: string, subcategory?: string): string | null {
+  for (const [apiCategory, mapping] of Object.entries(apiCategoryMapping)) {
+    if (mapping.category === category) {
+      if (mapping.subcategory) {
+        if (mapping.subcategory === subcategory) {
+          return apiCategory;
+        }
+      } else {
+        if (!subcategory) {
+          return apiCategory;
+        }
+      }
+    }
+  }
+  return null;
+}

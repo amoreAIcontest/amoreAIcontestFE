@@ -15,7 +15,7 @@ export default function ImageComponent({ imageUrl, title }: ImageComponentProps)
         height={240}
         className="self-stretch h-60 rounded-[20px] object-cover"
       />
-      <div className="self-stretch justify-start text-black text-base font-normal font-['Pretendard'] leading-6">
+      <div className="self-stretch justify-start text-black text-base font-normal font-['Pretendard'] leading-6 line-clamp-3 overflow-hidden">
         {title}
       </div>
     </div>

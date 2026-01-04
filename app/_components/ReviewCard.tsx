@@ -17,7 +17,7 @@ interface ReviewCardProps {
 }
 
 export default function ReviewCard({ review }: ReviewCardProps) {
-  const { username, profileImage, rating, date, packaging, beautyProfile, photos = [], sellerResponse } = review;
+  const { username, rating, date, packaging, beautyProfile, photos = [], sellerResponse } = review;
 
   return (
     <div className="self-stretch p-4 bg-white rounded-2xl inline-flex flex-col justify-start items-start gap-2.5">
@@ -26,7 +26,7 @@ export default function ReviewCard({ review }: ReviewCardProps) {
           <div className="self-stretch inline-flex justify-between items-start">
             <div className="flex justify-start items-center gap-3">
               <Image
-                src={profileImage}
+                src="/icons/home-icon/userDefault.svg"
                 alt={username}
                 width={40}
                 height={40}
@@ -68,8 +68,8 @@ export default function ReviewCard({ review }: ReviewCardProps) {
           <div className="self-stretch flex flex-col justify-start items-start gap-3">
             <div className="self-stretch flex flex-col justify-start items-start gap-1.5">
               {packaging && (
-                <div className="self-stretch inline-flex justify-start items-center gap-2">
-                  <div className="justify-start text-zinc-500 text-xs font-medium font-['Pretendard'] leading-4">
+                <div className="self-stretch inline-flex justify-start items-start gap-2">
+                  <div className="justify-start text-zinc-500 text-xs font-medium font-['Pretendard'] leading-4 shrink-0">
                     Packaging:
                   </div>
                   <div className="flex-1 justify-start text-zinc-900 text-xs font-normal font-['Pretendard'] leading-4">
@@ -78,8 +78,8 @@ export default function ReviewCard({ review }: ReviewCardProps) {
                 </div>
               )}
               {beautyProfile && (
-                <div className="self-stretch inline-flex justify-start items-center gap-2">
-                  <div className="justify-start text-zinc-500 text-xs font-medium font-['Pretendard'] leading-4">
+                <div className="self-stretch inline-flex justify-start items-start gap-2">
+                  <div className="justify-start text-zinc-500 text-xs font-medium font-['Pretendard'] leading-4 shrink-0">
                     Beauty Profile:
                   </div>
                   <div className="flex-1 justify-start text-zinc-900 text-xs font-normal font-['Pretendard'] leading-4">
@@ -88,31 +88,24 @@ export default function ReviewCard({ review }: ReviewCardProps) {
                 </div>
               )}
             </div>
-            <div className="inline-flex justify-start items-center gap-2">
-              {Array.from({ length: 5 }).map((_, index) => {
-                const photo = photos[index];
-                return (
+            {photos.length > 0 && (
+              <div className="inline-flex justify-start items-center gap-2">
+                {photos.map((photo, index) => (
                   <div
                     key={index}
-                    className="w-16 h-16 px-3 py-3.5 bg-gray-200 rounded-lg inline-flex flex-col justify-center items-center gap-2.5"
+                    className="w-16 h-16 rounded-lg overflow-hidden relative"
                   >
-                    {photo ? (
-                      <Image
-                        src={photo}
-                        alt={`Review photo ${index + 1}`}
-                        width={64}
-                        height={64}
-                        className="w-full h-full object-cover rounded-lg"
-                      />
-                    ) : (
-                      <div className="text-center justify-start text-zinc-500 text-xs font-normal font-['Pretendard'] leading-4">
-                        photo<br />section
-                      </div>
-                    )}
+                    <Image
+                      src={photo}
+                      alt={`Review photo ${index + 1}`}
+                      width={64}
+                      height={64}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
-                );
-              })}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
         {sellerResponse && (

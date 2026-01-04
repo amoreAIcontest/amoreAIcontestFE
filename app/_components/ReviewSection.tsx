@@ -1,22 +1,94 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import Image from 'next/image';
 import ReviewCard, { type ReviewData } from './ReviewCard';
+import { useReviewList } from '@/hooks/useReviewList';
+import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
+import { ReviewItem, ReviewListResponse } from '@/types/api';
 
 interface ReviewSectionProps {
-  reviews: ReviewData[];
+  productId: number;
+  initialData?: ReviewListResponse;
 }
 
 type SentimentFilter = '전체' | '긍정' | '중립' | '부정';
-type KeywordFilter = '전체' | '수분' | '향기' | '가격' | '사용감' | '키워드 01' | '키워드 02';
+type KeywordFilter = '전체' | '수분' | '저자극' | '클렌징' | '질감' | '배송';
+function convertReviewItemToReviewData(item: ReviewItem): ReviewData {
+  const contentParts = item.content.split('\n').filter(Boolean);
+  const packaging = contentParts.find(part => part.toLowerCase().includes('packaging')) || '';
+  const beautyProfile = contentParts.find(part => part.toLowerCase().includes('beauty') || part.toLowerCase().includes('profile')) || item.content;
 
-export default function ReviewSection({ reviews }: ReviewSectionProps) {
+  const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg'];
+  const filteredPhotos = (item.review_media || []).filter((url) => {
+    const lowerUrl = url.toLowerCase();
+    return imageExtensions.some(ext => lowerUrl.includes(ext));
+  });
+
+  return {
+    id: item.review_id.toString(),
+    username: item.author,
+    profileImage: '/icons/home-icon/userDefault.svg',
+    rating: item.rating,
+    date: item.review_date,
+    packaging: packaging || undefined,
+    beautyProfile: beautyProfile || undefined,
+    photos: filteredPhotos,
+    sellerResponse: item.sellers_response || undefined,
+  };
+}
+
+export default function ReviewSection({ productId, initialData }: ReviewSectionProps) {
   const [selectedSentiment, setSelectedSentiment] = useState<SentimentFilter>('전체');
   const [selectedKeyword, setSelectedKeyword] = useState<KeywordFilter>('전체');
   const [sortOrder, setSortOrder] = useState<'rating' | 'date'>('rating');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const apiSentimentType = useMemo(() => {
+    if (selectedSentiment === '전체') return null;
+    if (selectedSentiment === '긍정') return 'POSITIVE';
+    if (selectedSentiment === '중립') return 'NEUTRAL';
+    if (selectedSentiment === '부정') return 'NEGATIVE';
+    return null;
+  }, [selectedSentiment]);
+
+  const apiAspectType = useMemo(() => {
+    if (selectedKeyword === '전체') return null;
+    const keywordMap: Record<string, string> = {
+      '수분': 'Moisture',
+      '저자극': 'Gentle',
+      '클렌징': 'Cleansing',
+      '질감': 'Texture',
+      '배송': 'Delivery',
+    };
+    return keywordMap[selectedKeyword] || null;
+  }, [selectedKeyword]);
+
+  const apiSort = useMemo(() => {
+    if (sortOrder === 'rating') return 'RATING';
+    if (sortOrder === 'date') return 'LATEST';
+    return 'RATING';
+  }, [sortOrder]);
+
+  const { reviews, isLoading, hasNext, error, loadMore } = useReviewList({
+    productId,
+    sort: apiSort,
+    sentimentType: apiSentimentType,
+    aspectType: apiAspectType,
+    size: 10,
+    initialData,
+  });
+
+  const observerTarget = useInfiniteScroll({
+    hasNext,
+    isLoading,
+    onLoadMore: loadMore,
+  });
+
+  const convertedReviews = useMemo(() => {
+    return reviews.map(convertReviewItemToReviewData);
+  }, [reviews]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -35,15 +107,7 @@ export default function ReviewSection({ reviews }: ReviewSectionProps) {
   }, [isDropdownOpen]);
 
   const sentimentFilters: SentimentFilter[] = ['전체', '긍정', '중립', '부정'];
-  const keywordFilters: KeywordFilter[] = ['전체', '수분', '향기', '가격', '사용감', '키워드 01', '키워드 02'];
-
-  const sortedReviews = [...reviews].sort((a, b) => {
-    if (sortOrder === 'rating') {
-      return b.rating - a.rating;
-    } else {
-      return new Date(b.date).getTime() - new Date(a.date).getTime();
-    }
-  });
+  const keywordFilters: KeywordFilter[] = ['전체', '수분', '저자극', '클렌징', '질감', '배송'];
 
   const handleSortSelect = (order: 'rating' | 'date') => {
     setSortOrder(order);
@@ -153,9 +217,60 @@ export default function ReviewSection({ reviews }: ReviewSectionProps) {
         </div>
       </div>
       <div className="w-[725px] left-[24px] top-[145px] absolute inline-flex flex-col justify-start items-start gap-5 overflow-y-auto max-h-[395px]">
-        {sortedReviews.map((review) => (
-          <ReviewCard key={review.id} review={review} />
-        ))}
+        {isLoading && convertedReviews.length === 0 ? (
+          // 스켈레톤 UI
+          Array.from({ length: 3 }).map((_, index) => (
+            <div key={index} className="self-stretch p-4 bg-white rounded-2xl inline-flex flex-col justify-start items-start gap-2.5">
+              <div className="self-stretch flex flex-col justify-start items-start gap-3">
+                <div className="self-stretch flex flex-col justify-start items-start gap-2">
+                  <div className="self-stretch inline-flex justify-between items-start">
+                    <div className="flex justify-start items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-gray-200 animate-pulse" />
+                      <div className="w-20 inline-flex flex-col justify-start items-start gap-1">
+                        <div className="h-4 w-16 bg-gray-200 rounded animate-pulse" />
+                        <div className="flex gap-0.5">
+                          {Array.from({ length: 5 }).map((_, i) => (
+                            <div key={i} className="w-4 h-4 bg-gray-200 rounded animate-pulse" />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="h-4 w-20 bg-gray-200 rounded animate-pulse" />
+                  </div>
+                  <div className="self-stretch flex flex-col justify-start items-start gap-3">
+                    <div className="self-stretch flex flex-col justify-start items-start gap-1.5">
+                      <div className="self-stretch inline-flex justify-start items-start gap-2">
+                        <div className="h-4 w-16 bg-gray-200 rounded animate-pulse shrink-0" />
+                        <div className="flex-1 h-4 bg-gray-200 rounded animate-pulse" />
+                      </div>
+                      <div className="self-stretch inline-flex justify-start items-start gap-2">
+                        <div className="h-4 w-20 bg-gray-200 rounded animate-pulse shrink-0" />
+                        <div className="flex-1 h-4 bg-gray-200 rounded animate-pulse" />
+                      </div>
+                    </div>
+                    <div className="inline-flex justify-start items-center gap-2">
+                      {Array.from({ length: 3 }).map((_, i) => (
+                        <div key={i} className="w-16 h-16 bg-gray-200 rounded-lg animate-pulse" />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))
+        ) : (
+          <>
+            {convertedReviews.map((review) => (
+              <ReviewCard key={review.id} review={review} />
+            ))}
+            {error && (
+              <div className="text-red-500 text-center py-4">
+                {error}
+              </div>
+            )}
+            {hasNext && <div ref={observerTarget} className="h-10" />}
+          </>
+        )}
       </div>
     </div>
   );
