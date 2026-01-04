@@ -10,6 +10,7 @@ import AnalysisComparison from './AnalysisComparison';
 import InsightSection from './InsightSection';
 import RatingDistribution from './RatingDistribution';
 import SentimentDistribution from './SentimentDistribution';
+import DetailContentSkeleton from './DetailContentSkeleton';
 import { useProductDetail } from '@/hooks/useProductDetail';
 import { useProductRatings } from '@/hooks/useProductRatings';
 import { useProductSentiment } from '@/hooks/useProductSentiment';
@@ -27,42 +28,56 @@ interface DetailContentProps {
   initialInsightsData?: InsightResponse;
 }
 
-function DetailContentInner({ initialData, initialRatingsData, initialSentimentData, initialImagesData, initialReviewsData, initialInsightsData }: DetailContentProps) {
+function DetailContentInner({ 
+  initialData, 
+  initialRatingsData, 
+  initialSentimentData, 
+  initialImagesData, 
+  initialReviewsData, 
+  initialInsightsData 
+}: DetailContentProps = {}) {
   const searchParams = useSearchParams();
   const productId = searchParams.get('id');
   
   const productIdNumber = productId ? Number(productId) : 0;
-  const { product, isLoading, error } = useProductDetail({
+  const { product, isLoading: isLoadingDetail, error } = useProductDetail({
     productId: productIdNumber,
     initialData,
   });
 
-  const { ratings } = useProductRatings({
+  const { ratings, isLoading: isLoadingRatings } = useProductRatings({
     productId: productIdNumber,
     initialData: initialRatingsData,
   });
 
-  const { sentiments } = useProductSentiment({
+  const { sentiments, isLoading: isLoadingSentiment } = useProductSentiment({
     productId: productIdNumber,
     initialData: initialSentimentData,
   });
 
-  const { images } = useProductImages({
+  const { images, isLoading: isLoadingImages } = useProductImages({
     productId: productIdNumber,
     initialData: initialImagesData,
   });
 
-  const { insights } = useInsights({
+  const { insights, isLoading: isLoadingInsights } = useInsights({
     productId: productIdNumber,
     initialData: initialInsightsData,
   });
+
+  const isAnyLoading = 
+    (!initialData && isLoadingDetail) ||
+    (!initialRatingsData && isLoadingRatings) ||
+    (!initialSentimentData && isLoadingSentiment) ||
+    (!initialImagesData && isLoadingImages) ||
+    (!initialInsightsData && isLoadingInsights);
 
   const categoryMapping = product?.category
     ? mapApiCategoryToKorean(product.category)
     : null;
 
-  if (isLoading && !initialData) {
-    return <div>Loading...</div>;
+  if (isAnyLoading) {
+    return <DetailContentSkeleton />;
   }
 
   if (error) {
@@ -132,10 +147,24 @@ function DetailContentInner({ initialData, initialRatingsData, initialSentimentD
   );
 }
 
-export default function DetailContent({ initialData, initialRatingsData, initialSentimentData, initialImagesData, initialReviewsData, initialInsightsData }: DetailContentProps) {
+export default function DetailContent({ 
+  initialData, 
+  initialRatingsData, 
+  initialSentimentData, 
+  initialImagesData, 
+  initialReviewsData, 
+  initialInsightsData 
+}: DetailContentProps = {}) {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <DetailContentInner initialData={initialData} initialRatingsData={initialRatingsData} initialSentimentData={initialSentimentData} initialImagesData={initialImagesData} initialReviewsData={initialReviewsData} initialInsightsData={initialInsightsData} />
+    <Suspense fallback={<DetailContentSkeleton />}>
+      <DetailContentInner 
+        initialData={initialData} 
+        initialRatingsData={initialRatingsData} 
+        initialSentimentData={initialSentimentData} 
+        initialImagesData={initialImagesData} 
+        initialReviewsData={initialReviewsData} 
+        initialInsightsData={initialInsightsData} 
+      />
     </Suspense>
   );
 }
