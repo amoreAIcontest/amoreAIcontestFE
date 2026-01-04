@@ -3,7 +3,16 @@
 import { useState } from 'react';
 import { categories } from '@/types/categories';
 
-export default function CategorySidebar() {
+interface CategoryInfo {
+  category: string;
+  subcategory?: string;
+}
+
+interface CategorySidebarProps {
+  onCategoryChange?: (categoryInfo: CategoryInfo | null) => void;
+}
+
+export default function CategorySidebar({ onCategoryChange }: CategorySidebarProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>('전체');
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [selectedSubcategories, setSelectedSubcategories] = useState<Record<string, string>>(() => {
@@ -22,10 +31,13 @@ export default function CategorySidebar() {
 
   const handleCategoryClick = (categoryName: string) => {
     setSelectedCategory(categoryName);
-    if (categoryName !== '전체') {
-      toggleCategory(categoryName);
-    } else {
+    if (categoryName === '전체') {
+      onCategoryChange?.(null);
       setExpandedCategory(null);
+    } else {
+      const categoryInfo: CategoryInfo = { category: categoryName };
+      onCategoryChange?.(categoryInfo);
+      toggleCategory(categoryName);
     }
   };
 
@@ -34,6 +46,11 @@ export default function CategorySidebar() {
       ...prev,
       [categoryName]: subcategoryName,
     }));
+    const categoryInfo: CategoryInfo = {
+      category: categoryName,
+      subcategory: subcategoryName,
+    };
+    onCategoryChange?.(categoryInfo);
   };
 
   return (
