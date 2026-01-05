@@ -123,6 +123,7 @@ export interface CanvasSuggestion {
   copywriting: string;
   visual_description: string;
   reasoning: string;
+  url: string;
 }
 
 export interface InsightData {

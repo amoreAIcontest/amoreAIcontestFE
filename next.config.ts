@@ -19,6 +19,10 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'down-zl-sg.vod.susercontent.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'rfkxbvbmnyzskmasspuz.supabase.co',
+      },
     ],
   },
 };
