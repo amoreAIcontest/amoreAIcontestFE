@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import { CanvasSuggestion } from '@/types/api';
 
 type InsightTab = 'productAppeal' | 'salesStrategy' | 'improvement';
 
@@ -10,6 +11,7 @@ interface InsightSectionProps {
   salesStrategyText?: string;
   improvementImageUrl?: string;
   improvementText?: string;
+  canvasSuggestions?: CanvasSuggestion[];
 }
 
 function isValidUrl(url: string): boolean {
@@ -27,10 +29,30 @@ export default function InsightSection({
   salesStrategyText = '',
   improvementImageUrl = '',
   improvementText = '',
+  canvasSuggestions = [],
 }: InsightSectionProps) {
   const [activeTab, setActiveTab] = useState<InsightTab>('productAppeal');
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   
-  const hasValidImageUrl = isValidUrl(improvementImageUrl);
+  // canvasSuggestions가 있으면 url 우선, 없으면 기존 improvementImageUrl 사용
+  const imageUrls = canvasSuggestions.length > 0 
+    ? canvasSuggestions.map(s => s.url).filter(url => isValidUrl(url))
+    : isValidUrl(improvementImageUrl) ? [improvementImageUrl] : [];
+  
+  const currentImageUrl = imageUrls.length > 0 ? imageUrls[currentImageIndex] : '';
+  const currentText = canvasSuggestions.length > 0 && canvasSuggestions[currentImageIndex]
+    ? canvasSuggestions[currentImageIndex].copywriting
+    : improvementText;
+  
+  const hasValidImageUrl = isValidUrl(currentImageUrl);
+
+  const handlePrevious = () => {
+    setCurrentImageIndex((prev) => (prev - 1 + imageUrls.length) % imageUrls.length);
+  };
+
+  const handleNext = () => {
+    setCurrentImageIndex((prev) => (prev + 1) % imageUrls.length);
+  };
 
   const tabs = [
     { id: 'productAppeal' as InsightTab, label: '제품소구' },
@@ -84,13 +106,47 @@ export default function InsightSection({
           <div className="w-[1184px] p-6 bg-neutral-100 rounded-3xl inline-flex justify-start items-start gap-8">
             <div className="w-96 min-h-[694px] rounded-[20px] border border-zinc-400 relative overflow-hidden shrink-0">
               {hasValidImageUrl ? (
-                <Image
-                  src={improvementImageUrl}
-                  alt="개선 아이디어"
-                  width={384}
-                  height={694}
-                  className="w-full h-full object-cover"
-                />
+                <>
+                  <Image
+                    key={currentImageIndex}
+                    src={currentImageUrl}
+                    alt="개선 아이디어"
+                    width={384}
+                    height={694}
+                    className="w-full h-full object-cover"
+                  />
+                  {imageUrls.length > 1 && (
+                    <>
+                      <button
+                        onClick={handlePrevious}
+                        className="absolute left-4 top-1/2 transform -translate-y-1/2 w-10 h-10 bg-white/80 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition-all z-10"
+                      >
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      </button>
+                      <button
+                        onClick={handleNext}
+                        className="absolute right-4 top-1/2 transform -translate-y-1/2 w-10 h-10 bg-white/80 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition-all z-10"
+                      >
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      </button>
+                      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2">
+                        {imageUrls.map((_, index) => (
+                          <button
+                            key={index}
+                            onClick={() => setCurrentImageIndex(index)}
+                            className={`h-2 rounded-full transition-all ${
+                              index === currentImageIndex ? 'bg-white w-6' : 'bg-white/50 w-2'
+                            }`}
+                          />
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </>
               ) : (
                 <div className="w-full h-full min-h-[694px] bg-gray-200 flex items-center justify-center">
                   <span className="text-zinc-500 text-sm">이미지</span>
@@ -101,7 +157,7 @@ export default function InsightSection({
               <div 
                 className="self-stretch h-[650px] justify-start text-zinc-900 text-lg font-medium font-['Pretendard'] leading-7"
                 dangerouslySetInnerHTML={{ 
-                  __html: improvementText || 'Text Area<br/>(어떻게 개선하라는 안내)' 
+                  __html: currentText || 'Text Area<br/>(어떻게 개선하라는 안내)' 
                 }}
               />
             </div>

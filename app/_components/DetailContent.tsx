@@ -142,6 +142,7 @@ function DetailContentInner({
         salesStrategyText={insights?.strategy.strategies.join('\n\n') || ''}
         improvementImageUrl={insights?.canvas_suggestion?.[0]?.visual_description || ''}
         improvementText={insights?.canvas_suggestion?.[0]?.copywriting || ''}
+        canvasSuggestions={insights?.canvas_suggestion}
       />
     </>
   );
